@@ -113,13 +113,32 @@ class coco(IMDB):
 
     def gt_roidb(self):
         cache_file = os.path.join(self.cache_path, self.name + '_gt_roidb.pkl')
-        if os.path.exists(cache_file):
-            with open(cache_file, 'rb') as fid:
-                roidb = cPickle.load(fid)
-            print '{} gt roidb loaded from {}'.format(self.name, cache_file)
-            return roidb
+        #if os.path.exists(cache_file):
+        #    with open(cache_file, 'rb') as fid:
+        #        roidb = cPickle.load(fid)
+        #    print '{} gt roidb loaded from {}'.format(self.name, cache_file)
+        #    return roidb
+        
+        gt_roidb = []
+        img_index = []
+        for index in self.image_set_index:
+            filename = 'COCO_%s_%012d.jpg' % (self.data_name, index)
+            image_path = os.path.join(self.data_path, 'images', self.data_name, filename)
+            if os.path.exists(image_path):
+                gt_roidb.append(self._load_coco_annotation(index))
+                img_index.append(index)
+            else:
+                pass
+                #print(image_path)
 
-        gt_roidb = [self._load_coco_annotation(index) for index in self.image_set_index]
+        self.image_set_index = img_index
+        self.num_images = len(self.image_set_index)
+        
+        assert self.num_images == len(gt_roidb)
+        
+        print("gt roidb: {}".format(len(gt_roidb)))
+        
+        #gt_roidb = [self._load_coco_annotation(index) for index in self.image_set_index]
         with open(cache_file, 'wb') as fid:
             cPickle.dump(gt_roidb, fid, cPickle.HIGHEST_PROTOCOL)
         print 'wrote gt roidb to {}'.format(cache_file)

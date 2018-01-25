@@ -200,14 +200,28 @@ class IMDB(object):
         :return: roidb: [image_index]['boxes', 'gt_classes', 'gt_overlaps', 'flipped']
         """
         print 'append flipped images to roidb'
+        
+        print(self.num_images)
+        print(len(roidb))
+        
         assert self.num_images == len(roidb)
         for i in range(self.num_images):
             roi_rec = roidb[i]
             boxes = roi_rec['boxes'].copy()
             oldx1 = boxes[:, 0].copy()
             oldx2 = boxes[:, 2].copy()
+            
+            assert (oldx2 >= oldx1).all()
+            
             boxes[:, 0] = roi_rec['width'] - oldx2 - 1
             boxes[:, 2] = roi_rec['width'] - oldx1 - 1
+            
+            #print(roi_rec['width'])
+            #print(oldx2)
+            #print(oldx1)
+            #print(boxes[:, 0])
+            #print(boxes[:, 2])
+            
             assert (boxes[:, 2] >= boxes[:, 0]).all()
             entry = {'image': roi_rec['image'],
                      'height': roi_rec['height'],

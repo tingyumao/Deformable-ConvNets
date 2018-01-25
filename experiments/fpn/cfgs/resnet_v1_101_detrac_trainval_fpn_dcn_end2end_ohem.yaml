@@ -55,10 +55,10 @@ network:
 dataset:
   NUM_CLASSES: 4
   dataset: detrac
-  dataset_path: "./data/detrac"
+  dataset_path: "../detrac"
   image_set: train2014
   # image_set: minival2014
-  root_path: "./data"
+  root_path: "../detrac"
   test_image_set: minival2014
   proposal: rpn
 TRAIN:

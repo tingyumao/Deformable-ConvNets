@@ -125,12 +125,21 @@ def expand_bbox_regression_targets(bbox_targets_data, num_classes, cfg):
     if cfg.CLASS_AGNOSTIC:
         num_classes = 2
     bbox_targets = np.zeros((classes.size, 4 * num_classes), dtype=np.float32)
+    
+    #print("bbox target shape: ", bbox_targets.shape)
+    
     bbox_weights = np.zeros(bbox_targets.shape, dtype=np.float32)
     indexes = np.where(classes > 0)[0]
     for index in indexes:
         cls = classes[index]
         start = int(4 * 1 if cls > 0 else 0) if cfg.CLASS_AGNOSTIC else int(4 * cls)
         end = start + 4
+        
+        #print("bbox_targets_data[index, 1:]: ", bbox_targets_data[index, 1:].shape)
+        #print("start: {}".format(start))
+        #print("end: {}".format(end))
+        #print("bbox_targets[index, start:end]: ", bbox_targets[index, start:end].shape)
+        
         bbox_targets[index, start:end] = bbox_targets_data[index, 1:]
         bbox_weights[index, start:end] = cfg.TRAIN.BBOX_WEIGHTS
     return bbox_targets, bbox_weights

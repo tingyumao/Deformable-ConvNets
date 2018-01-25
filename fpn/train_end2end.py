@@ -133,6 +133,7 @@ def train_net(args, ctx, pretrained, epoch, prefix, begin_epoch, end_epoch, lr, 
     for child_metric in [rpn_eval_metric, rpn_cls_metric, rpn_bbox_metric, rpn_fg_metric, eval_fg_metric, eval_metric, cls_metric, bbox_metric]:
         eval_metrics.add(child_metric)
     # callback
+    print("train batch size is {}".format(train_data.batch_size))
     batch_end_callback = callback.Speedometer(train_data.batch_size, frequent=args.frequent)
     means = np.tile(np.array(config.TRAIN.BBOX_MEANS), 2 if config.CLASS_AGNOSTIC else config.dataset.NUM_CLASSES)
     stds = np.tile(np.array(config.TRAIN.BBOX_STDS), 2 if config.CLASS_AGNOSTIC else config.dataset.NUM_CLASSES)
@@ -157,6 +158,7 @@ def train_net(args, ctx, pretrained, epoch, prefix, begin_epoch, end_epoch, lr, 
         train_data = PrefetchingIter(train_data)
 
     # train
+    print("start to train...")
     mod.fit(train_data, eval_metric=eval_metrics, epoch_end_callback=epoch_end_callback,
             batch_end_callback=batch_end_callback, kvstore=config.default.kvstore,
             optimizer='sgd', optimizer_params=optimizer_params,

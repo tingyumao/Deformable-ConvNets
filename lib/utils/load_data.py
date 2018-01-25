@@ -1,10 +1,15 @@
 import numpy as np
 from dataset import *
+#from dataset import detrac
 
 
 def load_gt_roidb(dataset_name, image_set_name, root_path, dataset_path, result_path=None,
                   flip=False):
     """ load ground truth roidb """
+    
+    #print(type(coco))
+    #print(type(detrac))
+    
     imdb = eval(dataset_name)(image_set_name, root_path, dataset_path, result_path)
     roidb = imdb.gt_roidb()
     if flip:

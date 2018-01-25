@@ -50,6 +50,10 @@ def get_rpn_batch(roidb, cfg):
     :param roidb: ['image', 'flipped'] + ['gt_boxes', 'boxes', 'gt_classes']
     :return: data, label
     """
+    
+    
+    #print("length of roidb: ", len(roidb))
+    
     assert len(roidb) == 1, 'Single batch only'
     imgs, roidb = get_image(roidb, cfg)
     im_array = imgs[0]
@@ -67,7 +71,31 @@ def get_rpn_batch(roidb, cfg):
     data = {'data': im_array,
             'im_info': im_info}
     label = {'gt_boxes': gt_boxes}
+    
+    print(data["data"].shape)
+    
+    """
+    imgs, roidb = get_image(roidb, cfg)
+    im_array = imgs
+    im_info = [np.array([roidb[i]['im_info']], dtype=np.float32) for i in range(len(roidb))]
 
+    data = [{'data': im_array[i],
+            'im_info': im_info[i]} for i in range(len(roidb))]
+    
+    label = []
+    for i, _ in enumerate(roidb):
+        # gt boxes: (x1, y1, x2, y2, cls)
+        if roidb[i]['gt_classes'].size > 0:
+            gt_inds = np.where(roidb[i]['gt_classes'] != 0)[0]
+            gt_boxes = np.empty((roidb[i]['boxes'].shape[0], 5), dtype=np.float32)
+            gt_boxes[:, 0:4] = roidb[i]['boxes'][gt_inds, :]
+            gt_boxes[:, 4] = roidb[i]['gt_classes'][gt_inds]
+        else:
+            gt_boxes = np.empty((0, 5), dtype=np.float32)
+        label.append({'gt_boxes': gt_boxes})
+    
+    print(data[0]["data"].shape)
+    """
     return data, label
 
 
