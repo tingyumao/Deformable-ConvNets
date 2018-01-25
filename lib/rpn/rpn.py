@@ -72,7 +72,7 @@ def get_rpn_batch(roidb, cfg):
             'im_info': im_info}
     label = {'gt_boxes': gt_boxes}
     
-    print(data["data"].shape)
+    #print(data["data"].shape)
     
     """
     imgs, roidb = get_image(roidb, cfg)

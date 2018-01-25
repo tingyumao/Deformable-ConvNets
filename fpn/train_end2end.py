@@ -77,6 +77,11 @@ def train_net(args, ctx, pretrained, epoch, prefix, begin_epoch, end_epoch, lr, 
               for image_set in image_sets]
     roidb = merge_roidb(roidbs)
     roidb = filter_roidb(roidb, config)
+    
+    print(len(roidb))
+    print(roidb[0])
+    
+    roidb = roidb[:1000]
 
     # load training data
 
