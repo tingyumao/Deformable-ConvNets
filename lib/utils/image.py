@@ -24,6 +24,14 @@ def get_image(roidb, config):
         roi_rec = roidb[i]
         assert os.path.exists(roi_rec['image']), '%s does not exist'.format(roi_rec['image'])
         im = cv2.imread(roi_rec['image'], cv2.IMREAD_COLOR|cv2.IMREAD_IGNORE_ORIENTATION)
+        
+        # add ignore region
+        if "ignore_region" in roi_rec:
+            ignore_region = roi_rec["ignore_region"].copy()
+            for ig in ignore_region:
+                x1, y1, x2, y2 = ig
+                im[int(y1):int(y2), int(x1):int(x2)] = 0.0
+
         if roidb[i]['flipped']:
             im = im[:, ::-1, :]
         new_rec = roi_rec.copy()
