@@ -1,6 +1,6 @@
 ---
 MXNET_VERSION: "mxnet"
-output_path: "./output/fpn/detrac"
+output_path: "./output/fpn/coco"
 symbol: resnet_v1_101_fpn_dcn_rcnn
 gpus: '0'
 CLASS_AGNOSTIC: false
@@ -13,7 +13,7 @@ default:
   frequent: 100
   kvstore: device
 network:
-  pretrained: "./model/demo_model/fpn_dcn_coco"
+  pretrained: "./model/pretrained_model/resnet_v1_101"
   pretrained_epoch: 0
   PIXEL_MEANS:
   - 103.06
@@ -53,12 +53,12 @@ network:
   - 8
   NUM_ANCHORS: 3
 dataset:
-  NUM_CLASSES: 5
-  dataset: detrac
-  dataset_path: "../detrac"
-  image_set: train
+  NUM_CLASSES: 81
+  dataset: coco
+  dataset_path: "./data/coco"
+  image_set: train2014+valminusminival2014
   # image_set: minival2014
-  root_path: "../detrac"
+  root_path: "./data"
   test_image_set: minival2014
   proposal: rpn
 TRAIN:
@@ -71,7 +71,7 @@ TRAIN:
   wd: 0.0001
   begin_epoch: 0
   end_epoch: 7
-  model_prefix: 'fpn_detrac'
+  model_prefix: 'fpn_coco'
   # whether resume training
   RESUME: false
   # whether flip image

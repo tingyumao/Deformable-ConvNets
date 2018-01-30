@@ -35,7 +35,7 @@ class detrac(IMDB):
         cats = ["car", "bus", "van", "others"]#[cat['name'] for cat in self.coco.loadCats(self.coco.getCatIds())]
         self.classes = ['__background__'] + cats
         self.num_classes = len(self.classes)
-        self._class_to_ind = dict(zip(self.classes[1:], xrange(self.num_classes-1)))
+        self._class_to_ind = dict(zip(self.classes, xrange(self.num_classes)))
         #self._class_to_coco_ind = dict(zip(cats, self.coco.getCatIds()))
         #self._coco_ind_to_class_ind = dict([(self._class_to_coco_ind[cls], self._class_to_ind[cls])
         #                                    for cls in self.classes[1:]])
@@ -62,29 +62,23 @@ class detrac(IMDB):
         ignore_region = detrac_roi[3]
         boxes = [bbox[-4:] for bbox in detrac_roi[4]]
         num_box = len(boxes)
-        if num_box > 0:
-            boxes = np.stack(boxes, axis=1).transpose().astype(np.uint16) # bbox: [car_id, car_type, x1, y1, x2, y2]
-            
-            boxes[:,0] = np.clip(boxes[:,0], 0, width-1)
-            boxes[:,2] = np.clip(boxes[:,2], 0, width-1)
-            
-            boxes[:,1] = np.clip(boxes[:,1], 0, height-1)
-            boxes[:,3] = np.clip(boxes[:,3], 0, height-1)
-            
-            assert (boxes[:, 2] >= boxes[:, 0]).all()
-            assert (boxes[:, 3] >= boxes[:, 1]).all()
-            #print("hhh")
-            
-            gt_classes = np.asarray([self._class_to_ind[bbox[1]] for bbox in detrac_roi[4]], dtype=np.int32)
-            overlaps = np.zeros((num_box, self.num_classes), dtype=np.float32)
-            for i, bbox in enumerate(detrac_roi[4]):
-                overlaps[i, self._class_to_ind[bbox[1]]] = 1.0
-        else:
-            boxes = np.zeros((num_box, 4))
-            gt_classes = np.asarray([self._class_to_ind[bbox[1]] for bbox in detrac_roi[4]], dtype=np.int32)
-            overlaps = -1*np.ones((1,1))
-            
-        #print("bboxes shape: ", boxes.shape)
+        
+        boxes = np.stack(boxes, axis=1).transpose().astype(np.uint16) # bbox: [car_id, car_type, x1, y1, x2, y2]
+
+        boxes[:,0] = np.clip(boxes[:,0], 0, width-1)
+        boxes[:,2] = np.clip(boxes[:,2], 0, width-1)
+
+        boxes[:,1] = np.clip(boxes[:,1], 0, height-1)
+        boxes[:,3] = np.clip(boxes[:,3], 0, height-1)
+
+        assert (boxes[:, 2] >= boxes[:, 0]).all()
+        assert (boxes[:, 3] >= boxes[:, 1]).all()
+        #print("hhh")
+
+        gt_classes = np.asarray([self._class_to_ind[bbox[1]] for bbox in detrac_roi[4]], dtype=np.int32)
+        overlaps = np.zeros((num_box, self.num_classes), dtype=np.float32)
+        for i, bbox in enumerate(detrac_roi[4]):
+            overlaps[i, self._class_to_ind[bbox[1]]] = 1.0
 
         roi_rec = {'image': image_file,
                    'height': height,

@@ -54,7 +54,7 @@ def train_net(args, ctx, pretrained, epoch, prefix, begin_epoch, end_epoch, lr, 
     logger, final_output_path = create_logger(config.output_path, args.cfg, config.dataset.image_set)
     prefix = os.path.join(final_output_path, prefix)
 
-    # load symbol
+    # load symbol: load net
     shutil.copy2(os.path.join(curr_path, 'symbols', config.symbol + '.py'), final_output_path)
     sym_instance = eval(config.symbol + '.' + config.symbol)()
     sym = sym_instance.get_symbol(config, is_train=True)
@@ -78,10 +78,8 @@ def train_net(args, ctx, pretrained, epoch, prefix, begin_epoch, end_epoch, lr, 
     roidb = merge_roidb(roidbs)
     roidb = filter_roidb(roidb, config)
     
-    print(len(roidb))
+    print("number of train samples: {}".format(len(roidb)))
     print(roidb[0])
-    
-    roidb = roidb[:1000]
 
     # load training data
 
@@ -99,6 +97,11 @@ def train_net(args, ctx, pretrained, epoch, prefix, begin_epoch, end_epoch, lr, 
     data_shape_dict = dict(train_data.provide_data_single + train_data.provide_label_single)
     pprint.pprint(data_shape_dict)
     sym_instance.infer_shape(data_shape_dict)
+    
+    print("2"*200)
+    for k, v in data_shape_dict.items():
+        print(k, v)
+    print("2"*200)
 
     # load and initialize params
     if config.TRAIN.RESUME:

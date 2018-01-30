@@ -102,7 +102,11 @@ def main():
     num_classes = 19
 
     # load demo data
-    image_names = ['frankfurt_000001_073088_leftImg8bit.png', 'lindau_000024_000019_leftImg8bit.png']
+    #image_names = ['frankfurt_000001_073088_leftImg8bit.png', 'lindau_000024_000019_leftImg8bit.png']
+    #image_names = ["{}_0000.jpg".format(str(i)) for i in range(27)]#['1_0000.jpg', '2_0000.jpg', '3_0000.jpg', '4_0000.jpg']
+    #print(image_names)
+    image_names = ['test_city_inter.jpg']
+
     data = []
     for im_name in image_names:
         assert os.path.exists(cur_path + '/../demo/' + im_name), ('%s does not exist'.format('../demo/' + im_name))
@@ -122,7 +126,7 @@ def main():
     max_data_shape = [[('data', (1, 3, max([v[0] for v in config.SCALES]), max([v[1] for v in config.SCALES])))]]
     provide_data = [[(k, v.shape) for k, v in zip(data_names, data[i])] for i in xrange(len(data))]
     provide_label = [None for i in xrange(len(data))]
-    arg_params, aux_params = load_param(cur_path + '/../model/' + ('deeplab_dcn_cityscapes' if not args.deeplab_only else 'deeplab_cityscapes'), 0, process=True)
+    arg_params, aux_params = load_param(cur_path + '/../model/demo_model/' + ('deeplab_dcn_cityscapes' if not args.deeplab_only else 'deeplab_cityscapes'), 0, process=True)
     predictor = Predictor(sym, data_names, label_names,
                           context=[mx.gpu(0)], max_data_shapes=max_data_shape,
                           provide_data=provide_data, provide_label=provide_label,
@@ -154,11 +158,11 @@ def main():
         pure_im_name, ext_im_name = os.path.splitext(im_name)
         segmentation_result.save(cur_path + '/../demo/seg_' + pure_im_name + '.png')
         # visualize
-        im_raw = cv2.imread(cur_path + '/../demo/' + im_name)
-        seg_res = cv2.imread(cur_path + '/../demo/seg_' + pure_im_name + '.png')
-        cv2.imshow('Raw Image', im_raw)
-        cv2.imshow('segmentation_result', seg_res)
-        cv2.waitKey(0)
+        #im_raw = cv2.imread(cur_path + '/../demo/' + im_name)
+        #seg_res = cv2.imread(cur_path + '/../demo/seg_' + pure_im_name + '.png')
+        #cv2.imshow('Raw Image', im_raw)
+        #cv2.imshow('segmentation_result', seg_res)
+        #cv2.waitKey(0)
     print 'done'
 
 if __name__ == '__main__':
