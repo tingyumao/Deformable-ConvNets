@@ -14,7 +14,7 @@
 import cv2
 import matplotlib.pyplot as plt
 from random import random as rand
-def show_boxes(im, dets, classes, scale = 1.0):  
+def show_boxes(im, dets, classes, scale = 1.0, multi = False):  
     outputs = []  
     for cls_idx, cls_name in enumerate(classes):
         if cls_name in ['bicycle','car','motorcycle','bus', 'train', 'truck']:
@@ -23,14 +23,25 @@ def show_boxes(im, dets, classes, scale = 1.0):
             color = (0, 255, 0)
         
         cls_dets = dets[cls_idx]
-        for det in cls_dets:
-            bbox = det[:4] * scale
-            cv2.rectangle(im, (bbox[0], bbox[1]), (bbox[2], bbox[3]), color, 2) # x1, y1, x2, y2 
-            if cls_dets.shape[1] == 5:
-                score = det[-1]
-                font = cv2.FONT_HERSHEY_SIMPLEX
-                cv2.putText(im, '{:s} {:.3f}'.format(cls_name, score), (bbox[0], bbox[1]), font, 0.3, color, 1)
-                outputs.append([cls_name, score, bbox[0], bbox[1], bbox[2], bbox[3]])
+        if multi:
+            for scale_id, scale_dets in enumerate(cls_dets):
+                for det in scale_dets:
+                    bbox = det[:4] * scale
+                    cv2.rectangle(im, (bbox[0], bbox[1]), (bbox[2], bbox[3]), color, 2) # x1, y1, x2, y2 
+                    if scale_dets.shape[1] == 5:
+                        score = det[-1]
+                        font = cv2.FONT_HERSHEY_SIMPLEX
+                        cv2.putText(im, '{:s} {:.3f}'.format(cls_name, score), (bbox[0], bbox[1]), font, 0.3, color, 1)
+                        outputs.append([cls_name, scale_id, score, bbox[0], bbox[1], bbox[2], bbox[3]])
+        else:
+            for det in cls_dets:
+                bbox = det[:4] * scale
+                cv2.rectangle(im, (bbox[0], bbox[1]), (bbox[2], bbox[3]), color, 2) # x1, y1, x2, y2 
+                if cls_dets.shape[1] == 5:
+                    score = det[-1]
+                    font = cv2.FONT_HERSHEY_SIMPLEX
+                    cv2.putText(im, '{:s} {:.3f}'.format(cls_name, score), (bbox[0], bbox[1]), font, 0.3, color, 1)
+                    outputs.append([cls_name, score, bbox[0], bbox[1], bbox[2], bbox[3]])
     
     # shrink im
     #im = cv2.resize(im, (int(im.shape[1]*0.5), int(im.shape[0]*0.5)))

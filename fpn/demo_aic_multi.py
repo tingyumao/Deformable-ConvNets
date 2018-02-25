@@ -174,10 +174,10 @@ def main():
                     cls_dets[:, 2] += offx
                     cls_dets[:, 3] += offy
                     if scale_idx == 0:
-                        dets_nms.append(cls_dets)
+                        dets_nms.append([cls_dets])
                     else:
                         tmp = dets_nms[j-1]
-                        dets_nms[j-1] = np.concatenate((tmp, cls_dets), axis=0)
+                        dets_nms[j-1] = tmp + [cls_dets]#np.concatenate((tmp, cls_dets), axis=0)
                     num_dets += cls_dets.shape[0]
                     each_scale_dets += cls_dets.shape[0]
                 print("num dets at {} scale: {}".format(scale_idx, each_scale_dets))
@@ -188,7 +188,7 @@ def main():
             #im = cv2.cvtColor(im, cv2.COLOR_BGR2RGB)
             #im_bbox = show_boxes(im, dets_nms, classes, 1)
             #cv2.imwrite(im_path + im_name.replace(".jpg", "_bbox.jpg"), im_bbox)
-            save_im, outputs = show_boxes(im_original, dets_nms, classes, 1)
+            save_im, outputs = show_boxes(im_original, dets_nms, classes, 1, True)
             #cv2.imwrite(os.path.join(save_path, "{}_{}.jpg".format(vf.replace(".mp4", ""), str(frame_idx).zfill(5))), save_im)
             writer.writeFrame(save_im)
             

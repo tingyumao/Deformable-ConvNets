@@ -98,9 +98,9 @@ def main():
     print("successfully load model")
     
     # find all videos
-    video_path = "../../aic2018/track1/track1_videos"
+    video_path = "../../tmp"
     video_files = [ x for x in os.listdir(video_path) if x.endswith(".mp4")]
-    save_path = "../../aic2018/track1/output"
+    save_path = "../../tmp/output"
     if not os.path.isdir(save_path):
         os.makedirs(save_path)
     
@@ -146,7 +146,7 @@ def main():
             #im_bbox = show_boxes(im, dets_nms, classes, 1)
             #cv2.imwrite(im_path + im_name.replace(".jpg", "_bbox.jpg"), im_bbox)
             save_im, outputs = show_boxes(im, dets_nms, classes, 1)
-            cv2.imwrite(os.path.join(save_path, "{}_{}.jpg".format(vf.replace(".mp4", ""), str(frame_idx).zfill(5))), save_im)
+            #cv2.imwrite(os.path.join(save_path, "{}_{}.jpg".format(vf.replace(".mp4", ""), str(frame_idx).zfill(5))), save_im)
             
             for out in outputs:
                 vout.append([frame_idx] + out)

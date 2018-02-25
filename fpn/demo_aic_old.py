@@ -69,9 +69,9 @@ def main():
                'clock', 'vase', 'scissors', 'teddy bear', 'hair drier', 'toothbrush']
     # test
     # find all videos
-    video_path = "../../aic2018/track1/track1_videos"
+    video_path = "../../tmp"#"../../aic2018/track1/track1_videos"
     video_files = sorted([ x for x in os.listdir(video_path) if x.endswith(".mp4")])
-    save_path = "../../aic2018/track1/output"
+    save_path = "../../tmp/output"#"../../aic2018/track1/output"
     if not os.path.isdir(save_path):
         os.makedirs(save_path)
     
@@ -161,7 +161,7 @@ def main():
             #im = cv2.cvtColor(im, cv2.COLOR_BGR2RGB)
             #im_bbox = show_boxes(im, dets_nms, classes, 1)
             #cv2.imwrite(im_path + im_name.replace(".jpg", "_bbox.jpg"), im_bbox)
-            save_im, outputs = show_boxes(im_original, dets_nms, classes, 1)
+            save_im, outputs = show_boxes(im_original, dets_nms, classes, 1, False)
             #cv2.imwrite(os.path.join(save_path, "{}_{}.jpg".format(vf.replace(".mp4", ""), str(frame_idx).zfill(5))), save_im)
             writer.writeFrame(save_im)
             
